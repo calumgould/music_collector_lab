@@ -3,8 +3,8 @@ require_relative('../db/sql_runner')
 
 class Album
 
-attr_reader :id, :artist_id
-attr_accessor :name, :genre
+attr_reader :id, :artist_id, :genre
+attr_accessor :name
 
   def initialize(options)
     @name = options['name']
@@ -42,16 +42,6 @@ attr_accessor :name, :genre
     SqlRunner.run(sql, values)
   end
 
-  def find_artist()
-    sql = "SELECT * FROM artists
-    WHERE id = $1"
-    values = [@id]
-    results = SqlRunner.run(sql, values)
-    artist_hash = results.first
-    artist = Artist.new(artist_hash)
-    return artist.name
-  end
-
     def delete()
       sql="DELETE FROM albums WHERE id = $1"
       values = [@id]
@@ -69,10 +59,20 @@ attr_accessor :name, :genre
     return names.map { |name| Album.new(name)}
   end
 
-  def self.find_all(artist_id)
+  def self.find_all_albums_by_artist(artist_id)
     sql = "SELECT * FROM albums
     WHERE artist_id = $1"
     values = [artist_id]
+    results = SqlRunner.run(sql, values)
+    album_hash = results.first
+    album = Album.new(album_hash)
+    return album
+  end
+
+  def self.find_album(id)
+    sql = "SELECT * FROM albums
+    WHERE id = $1"
+    values = [id]
     results = SqlRunner.run(sql, values)
     album_hash = results.first
     album = Album.new(album_hash)
