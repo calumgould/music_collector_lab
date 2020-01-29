@@ -3,7 +3,9 @@ require_relative('../db/sql_runner')
 
 class Album
 
-attr_reader :name, :genre, :id, :artist_id
+attr_reader :id, :artist_id
+attr_accessor :name, :genre
+
   def initialize(options)
     @name = options['name']
     @genre = options['genre']
@@ -22,6 +24,22 @@ attr_reader :name, :genre, :id, :artist_id
       values = [@name, @genre, @artist_id]
       results = SqlRunner.run(sql, values)
       @id = results[0]['id'].to_i()
+  end
+
+  def update()
+    sql = "
+    UPDATE albums SET
+    (
+      name,
+      genre,
+      artist_id
+    ) =
+    (
+      $1, $2, $3
+    )
+    WHERE id = $4"
+    values = [@name, @genre, @artist_id, @id]
+    SqlRunner.run(sql, values)
   end
 
   def find_artist()
