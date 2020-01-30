@@ -20,10 +20,10 @@ attr_accessor :name
     artist_id
     ) VALUES (
       $1, $2, $3
-      ) RETURNING id"
-      values = [@name, @genre, @artist_id]
-      results = SqlRunner.run(sql, values)
-      @id = results[0]['id'].to_i()
+    ) RETURNING id"
+    values = [@name, @genre, @artist_id]
+    results = SqlRunner.run(sql, values)
+    @id = results[0]['id'].to_i()
   end
 
   def update()
